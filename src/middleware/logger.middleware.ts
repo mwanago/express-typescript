@@ -1,6 +1,6 @@
-import * as express from 'express';
+import { NextFunction, Request } from 'express';
 
-function loggerMiddleware(request: express.Request, response: express.Response, next) {
+function loggerMiddleware(request: Request, response: Response, next: NextFunction) {
   console.log(`${request.method} ${request.path}`);
   next();
 }
