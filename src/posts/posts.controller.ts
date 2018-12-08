@@ -15,10 +15,10 @@ class PostsController implements Controller {
   ];
 
   constructor() {
-    this.intializeRoutes();
+    this.initializeRoutes();
   }
 
-  public intializeRoutes() {
+  public initializeRoutes() {
     this.router.get(this.path, this.getAllPosts);
     this.router.post(this.path, this.createAPost);
   }
