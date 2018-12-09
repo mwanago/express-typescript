@@ -14,10 +14,10 @@ class PostsController implements Controller {
 
   private initializeRoutes() {
     this.router.get(this.path, this.getAllPosts);
-    this.router.get(`${this.path}/:id`, this.getThePostById);
-    this.router.put(`${this.path}/:id`, this.modifyThePost);
-    this.router.delete(`${this.path}/:id`, this.deleteAPost);
-    this.router.post(this.path, this.createAPost);
+    this.router.get(`${this.path}/:id`, this.getPostById);
+    this.router.put(`${this.path}/:id`, this.modifyPost);
+    this.router.delete(`${this.path}/:id`, this.deletePost);
+    this.router.post(this.path, this.createPost);
   }
 
   private getAllPosts = (request: express.Request, response: express.Response) => {
@@ -27,7 +27,7 @@ class PostsController implements Controller {
       });
   }
 
-  private getThePostById = (request: express.Request, response: express.Response) => {
+  private getPostById = (request: express.Request, response: express.Response) => {
     const id = request.params.id;
     this.post.findById(id)
       .then((post) => {
@@ -35,7 +35,7 @@ class PostsController implements Controller {
       });
   }
 
-  private modifyThePost = (request: express.Request, response: express.Response) => {
+  private modifyPost = (request: express.Request, response: express.Response) => {
     const id = request.params.id;
     const postData: Post = request.body;
     this.post.findByIdAndUpdate(id, postData, { new: true })
@@ -44,7 +44,7 @@ class PostsController implements Controller {
       });
   }
 
-  private createAPost = (request: express.Request, response: express.Response) => {
+  private createPost = (request: express.Request, response: express.Response) => {
     const postData: Post = request.body;
     const createdPost = new this.post(postData);
     createdPost.save()
@@ -53,7 +53,7 @@ class PostsController implements Controller {
       });
   }
 
-  private deleteAPost = (request: express.Request, response: express.Response) => {
+  private deletePost = (request: express.Request, response: express.Response) => {
     const id = request.params.id;
     this.post.findByIdAndDelete(id)
       .then((successResponse) => {
