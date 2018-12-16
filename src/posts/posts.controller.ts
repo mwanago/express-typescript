@@ -1,5 +1,4 @@
 import * as express from 'express';
-import HttpException from '../exceptions/HttpException';
 import PostNotFoundException from '../exceptions/PostNotFoundException';
 import Controller from '../interfaces/controller.interface';
 import validationMiddleware from '../middleware/validation.middleware';
