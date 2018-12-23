@@ -8,6 +8,7 @@
     "body-parser": "^1.18.3",
     "class-transformer": "^0.2.0",
     "class-validator": "^0.9.1",
+    "cookie-parser": "^1.4.3",
     "dotenv": "^6.2.0",
     "envalid": "^4.1.4",
     "express": "^4.16.4",
@@ -16,6 +17,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
+    "@types/cookie-parser": "^1.4.1",
     "@types/express": "^4.16.0",
     "@types/jsonwebtoken": "^8.3.0",
     "@types/mongoose": "^5.3.4",

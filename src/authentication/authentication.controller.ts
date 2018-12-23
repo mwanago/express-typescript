@@ -5,6 +5,7 @@ import User from 'users/user.interface';
 import UserWithThatEmailAlreadyExistsException from '../exceptions/UserWithThatEmailAlreadyExistsException';
 import WrongCredentialsException from '../exceptions/WrongCredentialsException';
 import Controller from '../interfaces/controller.interface';
+import DataStoredInToken from '../interfaces/dataStoredInToken';
 import TokenData from '../interfaces/tokenData.interface';
 import validationMiddleware from '../middleware/validation.middleware';
 import CreateUserDto from '../users/user.dto';
@@ -69,9 +70,12 @@ class AuthenticationController implements Controller {
   private createToken(user: User): TokenData {
     const expiresIn = 60 * 60; // an hour
     const secret = process.env.JWT_SECRET;
+    const dataStoredInToken: DataStoredInToken = {
+      _id: user._id,
+    };
     return {
       expiresIn,
-      token: jwt.sign({ _id: user._id }, secret, { expiresIn }),
+      token: jwt.sign(dataStoredInToken, secret, { expiresIn }),
     };
   }
 
