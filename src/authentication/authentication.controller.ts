@@ -1,8 +1,11 @@
 import * as bcrypt from 'bcrypt';
 import * as express from 'express';
+import * as jwt from 'jsonwebtoken';
+import User from 'users/user.interface';
 import UserWithThatEmailAlreadyExistsException from '../exceptions/UserWithThatEmailAlreadyExistsException';
 import WrongCredentialsException from '../exceptions/WrongCredentialsException';
 import Controller from '../interfaces/controller.interface';
+import TokenData from '../interfaces/tokenData.interface';
 import validationMiddleware from '../middleware/validation.middleware';
 import CreateUserDto from '../users/user.dto';
 import userModel from './../users/user.model';
@@ -35,6 +38,8 @@ class AuthenticationController implements Controller {
         password: hashedPassword,
       });
       user.password = undefined;
+      const tokenData = this.createToken(user);
+      response.setHeader('Set-Cookie', [this.createCookie(tokenData)]);
       response.send(user);
     }
   }
@@ -46,6 +51,8 @@ class AuthenticationController implements Controller {
       const doesPasswordMatch = await bcrypt.compare(logInData.password, user.password);
       if (doesPasswordMatch) {
         user.password = undefined;
+        const tokenData = this.createToken(user);
+        response.setHeader('Set-Cookie', [this.createCookie(tokenData)]);
         response.send(user);
       } else {
         next(new WrongCredentialsException());
@@ -54,6 +61,20 @@ class AuthenticationController implements Controller {
       next(new WrongCredentialsException());
     }
   }
+
+  private createCookie(tokenData: TokenData) {
+    return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn}`;
+  }
+
+  private createToken(user: User): TokenData {
+    const expiresIn = 60 * 60; // an hour
+    const secret = process.env.JWT_SECRET;
+    return {
+      expiresIn,
+      token: jwt.sign({ _id: user._id }, secret, { expiresIn }),
+    };
+  }
+
 }
 
 export default AuthenticationController;
