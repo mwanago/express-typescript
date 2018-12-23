@@ -27,36 +27,30 @@ class PostsController implements Controller {
       .post(this.path, authMiddleware, validationMiddleware(CreatePostDto), this.createPost);
   }
 
-  private getAllPosts = (request: express.Request, response: express.Response) => {
-    this.post.find()
-      .then((posts) => {
-        response.send(posts);
-      });
+  private getAllPosts = async (request: express.Request, response: express.Response) => {
+    const posts = await this.post.find();
+    response.send(posts);
   }
 
-  private getPostById = (request: express.Request, response: express.Response, next: express.NextFunction) => {
+  private getPostById = async (request: express.Request, response: express.Response, next: express.NextFunction) => {
     const id = request.params.id;
-    this.post.findById(id)
-      .then((post) => {
-        if (post) {
-          response.send(post);
-        } else {
-          next(new PostNotFoundException(id));
-        }
-      });
+    const post = await this.post.findById(id);
+    if (post) {
+      response.send(post);
+    } else {
+      next(new PostNotFoundException(id));
+    }
   }
 
-  private modifyPost = (request: express.Request, response: express.Response, next: express.NextFunction) => {
+  private modifyPost = async (request: express.Request, response: express.Response, next: express.NextFunction) => {
     const id = request.params.id;
     const postData: Post = request.body;
-    this.post.findByIdAndUpdate(id, postData, { new: true })
-      .then((post) => {
-        if (post) {
-          response.send(post);
-        } else {
-          next(new PostNotFoundException(id));
-        }
-      });
+    const post = await this.post.findByIdAndUpdate(id, postData, { new: true });
+    if (post) {
+      response.send(post);
+    } else {
+      next(new PostNotFoundException(id));
+    }
   }
 
   private createPost = async (request: RequestWithUser, response: express.Response) => {
@@ -69,16 +63,14 @@ class PostsController implements Controller {
     response.send(savedPost);
   }
 
-  private deletePost = (request: express.Request, response: express.Response, next: express.NextFunction) => {
+  private deletePost = async (request: express.Request, response: express.Response, next: express.NextFunction) => {
     const id = request.params.id;
-    this.post.findByIdAndDelete(id)
-      .then((successResponse) => {
-        if (successResponse) {
-          response.send(200);
-        } else {
-          next(new PostNotFoundException(id));
-        }
-      });
+    const successResponse = await this.post.findByIdAndDelete(id);
+    if (successResponse) {
+      response.send(200);
+    } else {
+      next(new PostNotFoundException(id));
+    }
   }
 }
 
