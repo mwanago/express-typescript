@@ -50,8 +50,8 @@ class AuthenticationController implements Controller {
     const logInData: LogInDto = request.body;
     const user = await this.user.findOne({ email: logInData.email });
     if (user) {
-      const doesPasswordMatch = await bcrypt.compare(logInData.password, user.password);
-      if (doesPasswordMatch) {
+      const isPasswordMatching = await bcrypt.compare(logInData.password, user.password);
+      if (isPasswordMatching) {
         user.password = undefined;
         const tokenData = this.createToken(user);
         response.setHeader('Set-Cookie', [this.createCookie(tokenData)]);
