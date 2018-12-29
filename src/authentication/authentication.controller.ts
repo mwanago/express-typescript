@@ -1,7 +1,6 @@
 import * as bcrypt from 'bcrypt';
 import * as express from 'express';
 import * as jwt from 'jsonwebtoken';
-import User from 'users/user.interface';
 import UserWithThatEmailAlreadyExistsException from '../exceptions/UserWithThatEmailAlreadyExistsException';
 import WrongCredentialsException from '../exceptions/WrongCredentialsException';
 import Controller from '../interfaces/controller.interface';
@@ -9,6 +8,7 @@ import DataStoredInToken from '../interfaces/dataStoredInToken';
 import TokenData from '../interfaces/tokenData.interface';
 import validationMiddleware from '../middleware/validation.middleware';
 import CreateUserDto from '../users/user.dto';
+import User from '../users/user.interface';
 import userModel from './../users/user.model';
 import LogInDto from './logIn.dto';
 
