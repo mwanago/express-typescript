@@ -4,7 +4,7 @@ import AuthenticationTokenMissingException from '../exceptions/AuthenticationTok
 import WrongAuthenticationTokenException from '../exceptions/WrongAuthenticationTokenException';
 import DataStoredInToken from '../interfaces/dataStoredInToken';
 import RequestWithUser from '../interfaces/requestWithUser.interface';
-import userModel from '../users/user.model';
+import userModel from '../user/user.model';
 
 async function authMiddleware(request: RequestWithUser, response: Response, next: NextFunction) {
   const cookies = request.cookies;

@@ -6,9 +6,9 @@ import authMiddleware from '../middleware/auth.middleware';
 import validationMiddleware from '../middleware/validation.middleware';
 import CreatePostDto from './post.dto';
 import Post from './post.interface';
-import postModel from './posts.model';
+import postModel from './post.model';
 
-class PostsController implements Controller {
+class PostController implements Controller {
   public path = '/posts';
   public router = express.Router();
   private post = postModel;
@@ -28,7 +28,8 @@ class PostsController implements Controller {
   }
 
   private getAllPosts = async (request: express.Request, response: express.Response) => {
-    const posts = await this.post.find();
+    const posts = await this.post.find()
+      .populate('author', '-password');
     response.send(posts);
   }
 
@@ -57,9 +58,10 @@ class PostsController implements Controller {
     const postData: CreatePostDto = request.body;
     const createdPost = new this.post({
       ...postData,
-      authorId: request.user._id,
+      author: request.user._id,
     });
     const savedPost = await createdPost.save();
+    await savedPost.populate('author', '-password').execPopulate();
     response.send(savedPost);
   }
 
@@ -74,4 +76,4 @@ class PostsController implements Controller {
   }
 }
 
-export default PostsController;
+export default PostController;

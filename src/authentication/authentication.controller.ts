@@ -7,9 +7,9 @@ import Controller from '../interfaces/controller.interface';
 import DataStoredInToken from '../interfaces/dataStoredInToken';
 import TokenData from '../interfaces/tokenData.interface';
 import validationMiddleware from '../middleware/validation.middleware';
-import CreateUserDto from '../users/user.dto';
-import User from '../users/user.interface';
-import userModel from './../users/user.model';
+import CreateUserDto from '../user/user.dto';
+import User from '../user/user.interface';
+import userModel from './../user/user.model';
 import LogInDto from './logIn.dto';
 
 class AuthenticationController implements Controller {
