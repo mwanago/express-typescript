@@ -13,14 +13,14 @@
     "envalid": "^4.1.4",
     "express": "^4.16.4",
     "jsonwebtoken": "^8.4.0",
-    "mongoose": "^5.3.15"
+    "mongoose": "5.4.2"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
     "@types/cookie-parser": "^1.4.1",
     "@types/express": "^4.16.0",
     "@types/jsonwebtoken": "^8.3.0",
-    "@types/mongoose": "^5.3.4",
+    "@types/mongoose": "^5.3.7",
     "@types/node": "^10.12.11",
     "husky": "^1.2.0",
     "node-gyp": "^3.8.0",

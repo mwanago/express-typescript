@@ -15,7 +15,8 @@
     "prefer-template": false,
     "interface-name": [true, "never-prefix"],
     "import-name": false,
-    "no-console": false
+    "no-console": false,
+    "object-literal-sort-keys": false
   },
   "rulesDirectory": []
 }
