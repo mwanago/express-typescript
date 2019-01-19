@@ -2,6 +2,7 @@ import 'dotenv/config';
 import 'reflect-metadata';
 import { createConnection } from 'typeorm';
 import App from './app';
+import AuthenticationController from './authentication/authentication.controller';
 import config from './ormconfig';
 import PostController from './post/post.controller';
 import validateEnv from './utils/validateEnv';
@@ -18,6 +19,7 @@ validateEnv();
   const app = new App(
     [
       new PostController(),
+      new AuthenticationController(),
     ],
   );
   app.listen();
