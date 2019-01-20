@@ -13,7 +13,6 @@ class Post {
   public content: string;
 
   @ManyToOne(() => User, (author: User) => author.posts)
-  @JoinColumn()
   public author: User;
 }
 

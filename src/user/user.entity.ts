@@ -16,16 +16,15 @@ class User {
   @Column()
   public password: string;
 
-  @OneToMany(() => Post, (post: Post) => post.author)
-  @JoinColumn()
-  public posts: Post[];
-
   @OneToOne(() => Address, (address: Address) => address.user, {
     cascade: true,
     eager: true,
   })
   @JoinColumn()
   public address: Address;
+
+  @OneToMany(() => Post, (post: Post) => post.author)
+  public posts: Post[];
 }
 
 export default User;
