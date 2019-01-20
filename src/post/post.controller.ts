@@ -45,7 +45,7 @@ class PostController implements Controller {
 
   private getPostById = async (request: express.Request, response: express.Response, next: express.NextFunction) => {
     const id = request.params.id;
-    const post = await this.postRepository.findOne(id);
+    const post = await this.postRepository.findOne(id, { relations: ['categories'] });
     if (post) {
       response.send(post);
     } else {
