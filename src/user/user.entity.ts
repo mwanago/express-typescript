@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import Address from '../address/address.entity';
 import Post from '../post/post.entity';
-import Address from './address.entity';
 
 @Entity()
 class User {
@@ -22,6 +22,7 @@ class User {
 
   @OneToOne(() => Address, (address: Address) => address.user, {
     cascade: true,
+    eager: true,
   })
   @JoinColumn()
   public address: Address;
