@@ -39,7 +39,7 @@ class PostController implements Controller {
   }
 
   private getAllPosts = async (request: express.Request, response: express.Response) => {
-    const posts = await this.postRepository.find();
+    const posts = await this.postRepository.find({ relations: ['categories'] });
     response.send(posts);
   }
 

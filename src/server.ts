@@ -4,6 +4,7 @@ import { createConnection } from 'typeorm';
 import AddressController from './address/address.controller';
 import App from './app';
 import AuthenticationController from './authentication/authentication.controller';
+import CategoryController from './category/category.controller';
 import config from './ormconfig';
 import PostController from './post/post.controller';
 import validateEnv from './utils/validateEnv';
@@ -22,6 +23,7 @@ validateEnv();
       new PostController(),
       new AuthenticationController(),
       new AddressController(),
+      new CategoryController(),
     ],
   );
   app.listen();
