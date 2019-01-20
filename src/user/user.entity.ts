@@ -1,5 +1,6 @@
-import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import Post from '../post/post.entity';
+import Address from './address.entity';
 
 @Entity()
 class User {
@@ -18,6 +19,12 @@ class User {
   @OneToMany(() => Post, (post: Post) => post.author)
   @JoinColumn()
   public posts: Post[];
+
+  @OneToOne(() => Address, (address: Address) => address.user, {
+    cascade: true,
+  })
+  @JoinColumn()
+  public address: Address;
 }
 
 export default User;
