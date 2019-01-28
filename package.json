@@ -33,7 +33,8 @@
   },
   "scripts": {
     "dev": "ts-node ./src/server.ts",
-    "lint": "tslint -p tsconfig.json -c tslint.json"
+    "lint": "tslint -p tsconfig.json -c tslint.json",
+    "typeorm:cli": "ts-node ./node_modules/typeorm/cli -f ./src/ormconfig.ts"
   },
   "author": "Marcin Wanago",
   "license": "MIT",
