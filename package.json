@@ -15,12 +15,14 @@
     "jsonwebtoken": "^8.4.0",
     "pg": "^7.8.0",
     "reflect-metadata": "^0.1.12",
+    "ts-jest": "^23.10.5",
     "typeorm": "^0.2.11"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
     "@types/cookie-parser": "^1.4.1",
     "@types/express": "^4.16.0",
+    "@types/jest": "^23.3.13",
     "@types/jsonwebtoken": "^8.3.0",
     "@types/node": "^10.12.11",
     "husky": "^1.2.0",
@@ -34,7 +36,8 @@
   "scripts": {
     "dev": "ts-node ./src/server.ts",
     "lint": "tslint -p tsconfig.json -c tslint.json",
-    "typeorm:cli": "ts-node ./node_modules/typeorm/cli -f ./src/ormconfig.ts"
+    "typeorm:cli": "ts-node ./node_modules/typeorm/cli -f ./src/ormconfig.ts",
+    "test": "ts-node ./node_modules/jest/bin/jest"
   },
   "author": "Marcin Wanago",
   "license": "MIT",
