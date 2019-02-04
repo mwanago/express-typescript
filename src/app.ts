@@ -5,7 +5,7 @@ import Controller from './interfaces/controller.interface';
 import errorMiddleware from './middleware/error.middleware';
 
 class App {
-  public app: express.Application;
+  private app: express.Application;
 
   constructor(controllers: Controller[]) {
     this.app = express();
@@ -19,6 +19,10 @@ class App {
     this.app.listen(process.env.PORT, () => {
       console.log(`App listening on the port ${process.env.PORT}`);
     });
+  }
+
+  public getServer() {
+    return this.app;
   }
 
   private initializeMiddlewares() {
