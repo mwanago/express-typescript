@@ -15,8 +15,8 @@ import LogInDto from './logIn.dto';
 class AuthenticationController implements Controller {
   public path = '/auth';
   public router = express.Router();
+  public authenticationService = new AuthenticationService();
   private user = userModel;
-  private authenticationService = new AuthenticationService();
 
   constructor() {
     this.initializeRoutes();
