@@ -1,7 +1,6 @@
 import * as bcrypt from 'bcrypt';
 import * as express from 'express';
 import * as jwt from 'jsonwebtoken';
-import UserWithThatEmailAlreadyExistsException from '../exceptions/UserWithThatEmailAlreadyExistsException';
 import WrongCredentialsException from '../exceptions/WrongCredentialsException';
 import Controller from '../interfaces/controller.interface';
 import DataStoredInToken from '../interfaces/dataStoredInToken';
@@ -10,12 +9,14 @@ import validationMiddleware from '../middleware/validation.middleware';
 import CreateUserDto from '../user/user.dto';
 import User from '../user/user.interface';
 import userModel from './../user/user.model';
+import AuthenticationService from './authentication.service';
 import LogInDto from './logIn.dto';
 
 class AuthenticationController implements Controller {
   public path = '/auth';
   public router = express.Router();
   private user = userModel;
+  private authenticationService = new AuthenticationService();
 
   constructor() {
     this.initializeRoutes();
@@ -29,20 +30,15 @@ class AuthenticationController implements Controller {
 
   private registration = async (request: express.Request, response: express.Response, next: express.NextFunction) => {
     const userData: CreateUserDto = request.body;
-    if (
-      await this.user.findOne({ email: userData.email })
-    ) {
-      next(new UserWithThatEmailAlreadyExistsException(userData.email));
-    } else {
-      const hashedPassword = await bcrypt.hash(userData.password, 10);
-      const user = await this.user.create({
-        ...userData,
-        password: hashedPassword,
-      });
-      user.password = undefined;
-      const tokenData = this.createToken(user);
-      response.setHeader('Set-Cookie', [this.createCookie(tokenData)]);
+    try {
+      const {
+        cookie,
+        user,
+      } = await this.authenticationService.register(userData);
+      response.setHeader('Set-Cookie', [cookie]);
       response.send(user);
+    } catch (error) {
+      next(error);
     }
   }
 
