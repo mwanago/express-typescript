@@ -8,7 +8,7 @@ import User from '../user/user.interface';
 import userModel from './../user/user.model';
 
 class AuthenticationService {
-  private user = userModel;
+  public user = userModel;
 
   public async register(userData: CreateUserDto) {
     if (
