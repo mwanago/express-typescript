@@ -1,5 +1,8 @@
 import * as bcrypt from 'bcrypt';
+import { Response } from 'express';
 import * as jwt from 'jsonwebtoken';
+import * as QRCode from 'qrcode';
+import * as speakeasy from 'speakeasy';
 import UserWithThatEmailAlreadyExistsException from '../exceptions/UserWithThatEmailAlreadyExistsException';
 import DataStoredInToken from '../interfaces/dataStoredInToken';
 import TokenData from '../interfaces/tokenData.interface';
@@ -28,6 +31,26 @@ class AuthenticationService {
       cookie,
       user,
     };
+  }
+  public getTwoFactorAuthenticationCode() {
+    const secretCode = speakeasy.generateSecret({
+      length: 20,
+      name: 'Node.js app',
+    });
+    return {
+      otpauthUrl : secretCode.otpauth_url,
+      base32: secretCode.base32,
+    };
+  }
+  public verifyTwoFactorAuthenticationCode(twoFactorAuthenticationCode: string, user: User) {
+    return speakeasy.totp.verify({
+      secret: user.twoFactorAuthenticationCode,
+      encoding: 'base32',
+      token: twoFactorAuthenticationCode,
+    });
+  }
+  public async responseWithQRCode(data: string, response: Response) {
+    QRCode.toFileStream(response, data);
   }
   public createCookie(tokenData: TokenData) {
     return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn}`;

@@ -4,7 +4,9 @@ import * as jwt from 'jsonwebtoken';
 import WrongCredentialsException from '../exceptions/WrongCredentialsException';
 import Controller from '../interfaces/controller.interface';
 import DataStoredInToken from '../interfaces/dataStoredInToken';
+import RequestWithUser from '../interfaces/requestWithUser.interface';
 import TokenData from '../interfaces/tokenData.interface';
+import authMiddleware from '../middleware/auth.middleware';
 import validationMiddleware from '../middleware/validation.middleware';
 import CreateUserDto from '../user/user.dto';
 import User from '../user/user.interface';
@@ -26,6 +28,8 @@ class AuthenticationController implements Controller {
     this.router.post(`${this.path}/register`, validationMiddleware(CreateUserDto), this.registration);
     this.router.post(`${this.path}/login`, validationMiddleware(LogInDto), this.loggingIn);
     this.router.post(`${this.path}/logout`, this.loggingOut);
+    this.router.post(`${this.path}/2fa/generate`, authMiddleware, this.generateTwoFactorAuthenticationCode);
+    this.router.post(`${this.path}/2fa/turn-on`, authMiddleware, this.turnOnTwoFactorAuthentication);
   }
 
   private registration = async (request: express.Request, response: express.Response, next: express.NextFunction) => {
@@ -39,6 +43,40 @@ class AuthenticationController implements Controller {
       response.send(user);
     } catch (error) {
       next(error);
+    }
+  }
+
+  private generateTwoFactorAuthenticationCode = async (
+    request: RequestWithUser,
+    response: express.Response,
+  ) => {
+    const user = request.user;
+    const {
+      otpauthUrl,
+      base32,
+    } = this.authenticationService.getTwoFactorAuthenticationCode();
+    await this.user.findByIdAndUpdate(user._id, {
+      twoFactorAuthenticationCode: base32,
+    });
+    this.authenticationService.responseWithQRCode(otpauthUrl, response);
+  }
+
+  private turnOnTwoFactorAuthentication = async (
+    request: RequestWithUser,
+    response: express.Response,
+  ) => {
+    const { twoFactorAuthenticationCode } = request.body;
+    const user = request.user;
+    const isCodeValid = await this.authenticationService.verifyTwoFactorAuthenticationCode(
+      twoFactorAuthenticationCode, user,
+    );
+    if (isCodeValid) {
+      await this.user.findByIdAndUpdate(user._id, {
+        isTwoFactorAuthenticationEnabled: true,
+      });
+      response.send(200);
+    } else {
+      response.send(400);
     }
   }
 
