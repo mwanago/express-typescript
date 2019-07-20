@@ -28,8 +28,10 @@ class AuthenticationController implements Controller {
     this.router.post(`${this.path}/register`, validationMiddleware(CreateUserDto), this.registration);
     this.router.post(`${this.path}/login`, validationMiddleware(LogInDto), this.loggingIn);
     this.router.post(`${this.path}/logout`, this.loggingOut);
+    this.router.get(`${this.path}`, authMiddleware, this.auth);
     this.router.post(`${this.path}/2fa/generate`, authMiddleware, this.generateTwoFactorAuthenticationCode);
     this.router.post(`${this.path}/2fa/turn-on`, authMiddleware, this.turnOnTwoFactorAuthentication);
+    this.router.post(`${this.path}/2fa/authenticate`, authMiddleware, this.secondFactorAuthentication);
   }
 
   private registration = async (request: express.Request, response: express.Response, next: express.NextFunction) => {
@@ -80,6 +82,24 @@ class AuthenticationController implements Controller {
     }
   }
 
+  private secondFactorAuthentication = async (
+    request: RequestWithUser,
+    response: express.Response,
+  ) => {
+    const { twoFactorAuthenticationCode } = request.body;
+    const user = request.user;
+    const isCodeValid = await this.authenticationService.verifyTwoFactorAuthenticationCode(
+      twoFactorAuthenticationCode, user,
+    );
+    if (isCodeValid) {
+      const tokenData = this.createToken(user, true);
+      response.setHeader('Set-Cookie', [this.createCookie(tokenData)]);
+      response.send(user);
+    } else {
+      response.send(400);
+    }
+  }
+
   private loggingIn = async (request: express.Request, response: express.Response, next: express.NextFunction) => {
     const logInData: LogInDto = request.body;
     const user = await this.user.findOne({ email: logInData.email });
@@ -98,6 +118,10 @@ class AuthenticationController implements Controller {
     }
   }
 
+  private auth = (request: RequestWithUser, response: express.Response) => {
+    response.send(request.user);
+  }
+
   private loggingOut = (request: express.Request, response: express.Response) => {
     response.setHeader('Set-Cookie', ['Authorization=;Max-age=0']);
     response.send(200);
@@ -107,10 +131,11 @@ class AuthenticationController implements Controller {
     return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn}`;
   }
 
-  private createToken(user: User): TokenData {
+  private createToken(user: User, isSecondFactorAuthenticated = false): TokenData {
     const expiresIn = 60 * 60; // an hour
     const secret = process.env.JWT_SECRET;
     const dataStoredInToken: DataStoredInToken = {
+      isSecondFactorAuthenticated,
       _id: user._id,
     };
     return {

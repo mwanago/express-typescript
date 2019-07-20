@@ -12,7 +12,8 @@ async function authMiddleware(request: RequestWithUser, response: Response, next
     const secret = process.env.JWT_SECRET;
     try {
       const verificationResponse = jwt.verify(cookies.Authorization, secret) as DataStoredInToken;
-      const id = verificationResponse._id;
+      const { _id: id, isSecondFactorAuthenticated } = verificationResponse;
+      console.log('isSecondFactorAuthenticated', isSecondFactorAuthenticated);
       const user = await userModel.findById(id);
       if (user) {
         request.user = user;
