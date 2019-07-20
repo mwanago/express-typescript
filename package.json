@@ -4,7 +4,8 @@
   "description": "",
   "main": "src/server.ts",
   "dependencies": {
-    "bcrypt": "^3.0.2",
+    "@types/bcrypt": "^3.0.0",
+    "bcrypt": "^3.0.6",
     "body-parser": "^1.18.3",
     "class-transformer": "^0.2.0",
     "class-validator": "^0.9.1",
@@ -16,7 +17,6 @@
     "mongoose": "5.4.2"
   },
   "devDependencies": {
-    "@types/bcrypt": "^3.0.0",
     "@types/cookie-parser": "^1.4.1",
     "@types/express": "^4.16.0",
     "@types/jest": "^24.0.10",
