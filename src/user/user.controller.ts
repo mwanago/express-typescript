@@ -15,7 +15,7 @@ class UserController implements Controller {
   }
 
   private initializeRoutes() {
-    this.router.get(`${this.path}/:id/posts`, authMiddleware, this.getAllPostsOfUser);
+    this.router.get(`${this.path}/:id/posts`, authMiddleware(), this.getAllPostsOfUser);
   }
 
   private getAllPostsOfUser = async (request: RequestWithUser, response: express.Response, next: express.NextFunction) => {

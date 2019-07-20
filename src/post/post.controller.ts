@@ -24,7 +24,7 @@ class PostController implements Controller {
       .all(`${this.path}/*`, authMiddleware)
       .patch(`${this.path}/:id`, validationMiddleware(CreatePostDto, true), this.modifyPost)
       .delete(`${this.path}/:id`, this.deletePost)
-      .post(this.path, authMiddleware, validationMiddleware(CreatePostDto), this.createPost);
+      .post(this.path, authMiddleware(), validationMiddleware(CreatePostDto), this.createPost);
   }
 
   private getAllPosts = async (request: express.Request, response: express.Response) => {

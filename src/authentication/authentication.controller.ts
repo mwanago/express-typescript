@@ -28,10 +28,10 @@ class AuthenticationController implements Controller {
     this.router.post(`${this.path}/register`, validationMiddleware(CreateUserDto), this.registration);
     this.router.post(`${this.path}/login`, validationMiddleware(LogInDto), this.loggingIn);
     this.router.post(`${this.path}/logout`, this.loggingOut);
-    this.router.get(`${this.path}`, authMiddleware, this.auth);
-    this.router.post(`${this.path}/2fa/generate`, authMiddleware, this.generateTwoFactorAuthenticationCode);
-    this.router.post(`${this.path}/2fa/turn-on`, authMiddleware, this.turnOnTwoFactorAuthentication);
-    this.router.post(`${this.path}/2fa/authenticate`, authMiddleware, this.secondFactorAuthentication);
+    this.router.get(`${this.path}`, authMiddleware(), this.auth);
+    this.router.post(`${this.path}/2fa/generate`, authMiddleware(), this.generateTwoFactorAuthenticationCode);
+    this.router.post(`${this.path}/2fa/turn-on`, authMiddleware(), this.turnOnTwoFactorAuthentication);
+    this.router.post(`${this.path}/2fa/authenticate`, authMiddleware(true), this.secondFactorAuthentication);
   }
 
   private registration = async (request: express.Request, response: express.Response, next: express.NextFunction) => {
