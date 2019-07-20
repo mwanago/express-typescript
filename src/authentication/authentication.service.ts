@@ -35,7 +35,7 @@ class AuthenticationService {
   public getTwoFactorAuthenticationCode() {
     const secretCode = speakeasy.generateSecret({
       length: 20,
-      name: 'Node.js app',
+      name: process.env.TWO_FACTOR_AUTHENTICATION_APP_NAME,
     });
     return {
       otpauthUrl : secretCode.otpauth_url,
@@ -49,7 +49,7 @@ class AuthenticationService {
       token: twoFactorAuthenticationCode,
     });
   }
-  public async responseWithQRCode(data: string, response: Response) {
+  public async respondWithQRCode(data: string, response: Response) {
     QRCode.toFileStream(response, data);
   }
   public createCookie(tokenData: TokenData) {

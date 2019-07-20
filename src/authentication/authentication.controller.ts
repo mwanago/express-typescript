@@ -60,7 +60,7 @@ class AuthenticationController implements Controller {
     await this.user.findByIdAndUpdate(user._id, {
       twoFactorAuthenticationCode: base32,
     });
-    this.authenticationService.responseWithQRCode(otpauthUrl, response);
+    this.authenticationService.respondWithQRCode(otpauthUrl, response);
   }
 
   private turnOnTwoFactorAuthentication = async (
