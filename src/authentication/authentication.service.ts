@@ -34,7 +34,6 @@ class AuthenticationService {
   }
   public getTwoFactorAuthenticationCode() {
     const secretCode = speakeasy.generateSecret({
-      length: 20,
       name: process.env.TWO_FACTOR_AUTHENTICATION_APP_NAME,
     });
     return {
