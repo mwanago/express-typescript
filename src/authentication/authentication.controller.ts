@@ -106,7 +106,7 @@ class AuthenticationController implements Controller {
       twoFactorAuthenticationCode, user,
     );
     if (isCodeValid) {
-      const tokenData = this.createToken(user, true);
+      const tokenData = this.authenticationService.createToken(user, true);
       response.setHeader('Set-Cookie', [this.createCookie(tokenData)]);
       response.send(user);
     } else {
@@ -121,7 +121,7 @@ class AuthenticationController implements Controller {
       const isPasswordMatching = await bcrypt.compare(logInData.password, user.password);
       if (isPasswordMatching) {
         user.password = undefined;
-        const tokenData = this.createToken(user);
+        const tokenData = this.authenticationService.createToken(user);
         response.setHeader('Set-Cookie', [this.createCookie(tokenData)]);
         response.send(user);
       } else {
@@ -144,20 +144,6 @@ class AuthenticationController implements Controller {
   private createCookie(tokenData: TokenData) {
     return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn}`;
   }
-
-  private createToken(user: User, isSecondFactorAuthenticated = false): TokenData {
-    const expiresIn = 60 * 60; // an hour
-    const secret = process.env.JWT_SECRET;
-    const dataStoredInToken: DataStoredInToken = {
-      isSecondFactorAuthenticated,
-      _id: user._id,
-    };
-    return {
-      expiresIn,
-      token: jwt.sign(dataStoredInToken, secret, { expiresIn }),
-    };
-  }
-
 }
 
 export default AuthenticationController;
