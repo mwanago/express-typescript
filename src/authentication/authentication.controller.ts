@@ -99,6 +99,8 @@ class AuthenticationController implements Controller {
   ) => {
     const { twoFactorAuthenticationCode } = request.body;
     const user = request.user;
+    user.password = undefined;
+    user.twoFactorAuthenticationCode = undefined;
     const isCodeValid = await this.authenticationService.verifyTwoFactorAuthenticationCode(
       twoFactorAuthenticationCode, user,
     );
@@ -118,9 +120,16 @@ class AuthenticationController implements Controller {
       const isPasswordMatching = await bcrypt.compare(logInData.password, user.password);
       if (isPasswordMatching) {
         user.password = undefined;
+        user.twoFactorAuthenticationCode = undefined;
         const tokenData = this.authenticationService.createToken(user);
         response.setHeader('Set-Cookie', [this.createCookie(tokenData)]);
-        response.send(user);
+        if (user.isTwoFactorAuthenticationEnabled) {
+          response.send({
+            isTwoFactorAuthenticationEnabled: true,
+          });
+        } else {
+          response.send(user);
+        }
       } else {
         next(new WrongCredentialsException());
       }
