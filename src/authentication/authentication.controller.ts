@@ -1,16 +1,13 @@
 import * as bcrypt from 'bcrypt';
 import * as express from 'express';
-import * as jwt from 'jsonwebtoken';
 import WrongCredentialsException from '../exceptions/WrongCredentialsException';
 import WrongAuthenticationTokenException from '../exceptions/WrongTwoFactorAuthenticationCodeException';
 import Controller from '../interfaces/controller.interface';
-import DataStoredInToken from '../interfaces/dataStoredInToken';
 import RequestWithUser from '../interfaces/requestWithUser.interface';
 import TokenData from '../interfaces/tokenData.interface';
 import authMiddleware from '../middleware/auth.middleware';
 import validationMiddleware from '../middleware/validation.middleware';
 import CreateUserDto from '../user/user.dto';
-import User from '../user/user.interface';
 import userModel from './../user/user.model';
 import AuthenticationService from './authentication.service';
 import LogInDto from './logIn.dto';
