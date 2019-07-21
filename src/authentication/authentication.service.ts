@@ -33,6 +33,9 @@ class AuthenticationService {
     };
   }
   public getTwoFactorAuthenticationCode() {
+
+    console.log('process.env.TWO_FACTOR_AUTHENTICATION_APP_NAME,', process.env.TWO_FACTOR_AUTHENTICATION_APP_NAME);
+
     const secretCode = speakeasy.generateSecret({
       name: process.env.TWO_FACTOR_AUTHENTICATION_APP_NAME,
     });
@@ -54,10 +57,11 @@ class AuthenticationService {
   public createCookie(tokenData: TokenData) {
     return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn}`;
   }
-  public createToken(user: User): TokenData {
+  public createToken(user: User, isSecondFactorAuthenticated = false): TokenData {
     const expiresIn = 60 * 60; // an hour
     const secret = process.env.JWT_SECRET;
     const dataStoredInToken: DataStoredInToken = {
+      isSecondFactorAuthenticated,
       _id: user._id,
     };
     return {

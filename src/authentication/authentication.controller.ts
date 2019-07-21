@@ -2,6 +2,7 @@ import * as bcrypt from 'bcrypt';
 import * as express from 'express';
 import * as jwt from 'jsonwebtoken';
 import WrongCredentialsException from '../exceptions/WrongCredentialsException';
+import WrongAuthenticationTokenException from '../exceptions/WrongTwoFactorAuthenticationCodeException';
 import Controller from '../interfaces/controller.interface';
 import DataStoredInToken from '../interfaces/dataStoredInToken';
 import RequestWithUser from '../interfaces/requestWithUser.interface';
@@ -66,6 +67,7 @@ class AuthenticationController implements Controller {
   private turnOnTwoFactorAuthentication = async (
     request: RequestWithUser,
     response: express.Response,
+    next: express.NextFunction,
   ) => {
     const { twoFactorAuthenticationCode } = request.body;
     const user = request.user;
@@ -78,13 +80,14 @@ class AuthenticationController implements Controller {
       });
       response.send(200);
     } else {
-      response.send(400);
+      next(new WrongAuthenticationTokenException());
     }
   }
 
   private secondFactorAuthentication = async (
     request: RequestWithUser,
     response: express.Response,
+    next: express.NextFunction,
   ) => {
     const { twoFactorAuthenticationCode } = request.body;
     const user = request.user;
@@ -96,7 +99,7 @@ class AuthenticationController implements Controller {
       response.setHeader('Set-Cookie', [this.createCookie(tokenData)]);
       response.send(user);
     } else {
-      response.send(400);
+      next(new WrongAuthenticationTokenException());
     }
   }
 
