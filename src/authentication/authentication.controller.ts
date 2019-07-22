@@ -99,15 +99,18 @@ class AuthenticationController implements Controller {
   ) => {
     const { twoFactorAuthenticationCode } = request.body;
     const user = request.user;
-    user.password = undefined;
-    user.twoFactorAuthenticationCode = undefined;
+    console.log('user', user);
     const isCodeValid = await this.authenticationService.verifyTwoFactorAuthenticationCode(
       twoFactorAuthenticationCode, user,
     );
     if (isCodeValid) {
       const tokenData = this.authenticationService.createToken(user, true);
       response.setHeader('Set-Cookie', [this.createCookie(tokenData)]);
-      response.send(user);
+      response.send({
+        ...user.toObject(),
+        password: undefined,
+        twoFactorAuthenticationCode: undefined
+      });
     } else {
       next(new WrongAuthenticationTokenException());
     }
