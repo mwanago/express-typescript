@@ -142,7 +142,11 @@ class AuthenticationController implements Controller {
   }
 
   private auth = (request: RequestWithUser, response: express.Response) => {
-    response.send(request.user);
+    response.send({
+      ...request.user.toObject(),
+      password: undefined,
+      twoFactorAuthenticationCode: undefined
+    });
   }
 
   private loggingOut = (request: express.Request, response: express.Response) => {
