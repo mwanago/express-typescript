@@ -14,7 +14,7 @@
     "envalid": "^4.1.4",
     "express": "^4.16.4",
     "jsonwebtoken": "^8.4.0",
-    "mongoose": "5.4.2"
+    "mongoose": "5.7.5"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.1",
