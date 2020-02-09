@@ -1,4 +1,4 @@
-import * as express from 'express';
+import { Request, Response, NextFunction, Router } from 'express';
 import PostNotFoundException from '../exceptions/PostNotFoundException';
 import Controller from '../interfaces/controller.interface';
 import RequestWithUser from '../interfaces/requestWithUser.interface';
@@ -10,7 +10,7 @@ import postModel from './post.model';
 
 class PostController implements Controller {
   public path = '/posts';
-  public router = express.Router();
+  public router = Router();
   private post = postModel;
 
   constructor() {
@@ -27,13 +27,13 @@ class PostController implements Controller {
       .post(this.path, authMiddleware, validationMiddleware(CreatePostDto), this.createPost);
   }
 
-  private getAllPosts = async (request: express.Request, response: express.Response) => {
+  private getAllPosts = async (request: Request, response: Response) => {
     const posts = await this.post.find()
       .populate('author', '-password');
     response.send(posts);
   }
 
-  private getPostById = async (request: express.Request, response: express.Response, next: express.NextFunction) => {
+  private getPostById = async (request: Request, response: Response, next: NextFunction) => {
     const id = request.params.id;
     const post = await this.post.findById(id);
     if (post) {
@@ -43,7 +43,7 @@ class PostController implements Controller {
     }
   }
 
-  private modifyPost = async (request: express.Request, response: express.Response, next: express.NextFunction) => {
+  private modifyPost = async (request: Request, response: Response, next: NextFunction) => {
     const id = request.params.id;
     const postData: Post = request.body;
     const post = await this.post.findByIdAndUpdate(id, postData, { new: true });
@@ -54,7 +54,7 @@ class PostController implements Controller {
     }
   }
 
-  private createPost = async (request: RequestWithUser, response: express.Response) => {
+  private createPost = async (request: RequestWithUser, response: Response) => {
     const postData: CreatePostDto = request.body;
     const createdPost = new this.post({
       ...postData,
@@ -65,7 +65,7 @@ class PostController implements Controller {
     response.send(savedPost);
   }
 
-  private deletePost = async (request: express.Request, response: express.Response, next: express.NextFunction) => {
+  private deletePost = async (request: Request, response: Response, next: NextFunction) => {
     const id = request.params.id;
     const successResponse = await this.post.findByIdAndDelete(id);
     if (successResponse) {

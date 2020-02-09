@@ -1,10 +1,10 @@
-import * as express from 'express';
+import { Request, Response, Router } from 'express';
 import Controller from '../interfaces/controller.interface';
 import userModel from '../user/user.model';
 
 class ReportController implements Controller {
   public path = '/report';
-  public router = express.Router();
+  public router = Router();
   private user = userModel;
 
   constructor() {
@@ -15,7 +15,7 @@ class ReportController implements Controller {
     this.router.get(`${this.path}`, this.generateReport);
   }
 
-  private generateReport = async (request: express.Request, response: express.Response, next: express.NextFunction) => {
+  private generateReport = async (request: Request, response: Response) => {
     const usersByCountries = await this.user.aggregate(
       [
         {

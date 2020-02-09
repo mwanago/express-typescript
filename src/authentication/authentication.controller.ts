@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcrypt';
-import * as express from 'express';
+import { Request, Response, NextFunction, Router } from 'express';
 import * as jwt from 'jsonwebtoken';
 import WrongCredentialsException from '../exceptions/WrongCredentialsException';
 import Controller from '../interfaces/controller.interface';
@@ -14,7 +14,7 @@ import LogInDto from './logIn.dto';
 
 class AuthenticationController implements Controller {
   public path = '/auth';
-  public router = express.Router();
+  public router = Router();
   public authenticationService = new AuthenticationService();
   private user = userModel;
 
@@ -28,7 +28,7 @@ class AuthenticationController implements Controller {
     this.router.post(`${this.path}/logout`, this.loggingOut);
   }
 
-  private registration = async (request: express.Request, response: express.Response, next: express.NextFunction) => {
+  private registration = async (request: Request, response: Response, next: NextFunction) => {
     const userData: CreateUserDto = request.body;
     try {
       const {
@@ -42,7 +42,7 @@ class AuthenticationController implements Controller {
     }
   }
 
-  private loggingIn = async (request: express.Request, response: express.Response, next: express.NextFunction) => {
+  private loggingIn = async (request: Request, response: Response, next: NextFunction) => {
     const logInData: LogInDto = request.body;
     const user = await this.user.findOne({ email: logInData.email });
     if (user) {
@@ -62,7 +62,7 @@ class AuthenticationController implements Controller {
     }
   }
 
-  private loggingOut = (request: express.Request, response: express.Response) => {
+  private loggingOut = (request: Request, response: Response) => {
     response.setHeader('Set-Cookie', ['Authorization=;Max-age=0']);
     response.send(200);
   }
