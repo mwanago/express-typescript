@@ -7,11 +7,21 @@ const addressSchema = new mongoose.Schema({
   street: String,
 });
 
-const userSchema = new mongoose.Schema({
-  address: addressSchema,
-  email: String,
-  name: String,
-  password: String,
+const userSchema = new mongoose.Schema(
+  {
+    address: addressSchema,
+    email: String,
+    firstName: String,
+    lastName: String,
+    password: String,
+  },
+  {
+    toJSON: { virtuals: true },
+  },
+);
+
+userSchema.virtual('fullName').get(function () {
+  return `${this.firstName} ${this.lastName}`;
 });
 
 const userModel = mongoose.model<User & mongoose.Document>('User', userSchema);

@@ -3,7 +3,10 @@ import CreateAddressDto from './address.dto';
 
 class CreateUserDto {
   @IsString()
-  public name: string;
+  public firstName: string;
+
+  @IsString()
+  public lastName: string;
 
   @IsString()
   public email: string;
