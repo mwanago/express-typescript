@@ -30,6 +30,12 @@ userSchema.virtual('fullName').get(function () {
   return `${this.firstName} ${this.lastName}`;
 });
 
+userSchema.virtual('posts', {
+  ref: 'Post',
+  localField: '_id',
+  foreignField: 'author',
+});
+
 const userModel = mongoose.model<User & mongoose.Document>('User', userSchema);
 
 export default userModel;
