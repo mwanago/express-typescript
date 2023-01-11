@@ -8,7 +8,7 @@
     "bcrypt": "^3.0.8",
     "body-parser": "^1.19.0",
     "class-transformer": "^0.2.3",
-    "class-validator": "^0.11.0",
+    "class-validator": "^0.14.0",
     "cookie-parser": "^1.4.4",
     "dotenv": "^8.2.0",
     "envalid": "^6.0.1",
